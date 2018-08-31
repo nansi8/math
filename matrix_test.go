@@ -6,6 +6,16 @@ import (
 
 var algebra ByteAlgebra = new(ByteAlgebraImpl)
 
+func TestDetTrivialMatrix(t *testing.T) {
+	trivialMartix := [][]byte{
+		{1},
+	}
+	detTrivial := Det(trivialMartix, algebra)
+	if detTrivial != 1 {
+		t.Errorf("Det of trivial matrix must be 1 but it's %d", detTrivial)
+	}
+}
+
 func TestDetZeroMatrix(t *testing.T) {
 	zeroMatrix := [][]byte{
 		{0, 0, 0},
