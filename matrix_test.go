@@ -65,7 +65,7 @@ func TestDetMatrix3(t *testing.T) {
 	}
 	det := Det(m, algebra)
 	if det != 198 {
-		t.Errorf("Det3 of case 198 matrix must be 0 but it's %d", det)
+		t.Errorf("Det3 of matrix must be 198 but it's %d", det)
 	}
 }
 
