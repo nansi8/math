@@ -5,12 +5,13 @@ import (
 )
 
 var algebra ByteAlgebra = new(ByteAlgebraImpl)
+var galoisAlgebra ByteAlgebra = New(4)
 
 func TestDetTrivialMatrix(t *testing.T) {
-	trivialMartix := [][]byte{
+	trivialMatrix := [][]byte{
 		{1},
 	}
-	detTrivial := Det(trivialMartix, algebra)
+	detTrivial := Det(trivialMatrix, algebra)
 	if detTrivial != 1 {
 		t.Errorf("Det of trivial matrix must be 1 but it's %d", detTrivial)
 	}
@@ -89,4 +90,25 @@ func TestCross(t *testing.T) {
 	if cross[0][0] != 1 || cross[0][1] != 3 || cross[1][0] != 7 || cross[1][1] != 9 {
 		t.Error("Cross function returns wrong result")
 	}
+}
+
+func TestMatrixDiv(t *testing.T) {
+	matrix := [][]byte{
+		{2, 4},
+		{6, 8},
+	}
+	div := Div(matrix, 2, algebra)
+	if div[0][0] != 1 || div[0][1] != 2 || div[1][0] != 3 || div[1][1] != 4 {
+		t.Error("Matrix division returns wrong result")
+	}
+}
+
+func TestReverse(t *testing.T) {
+	matrix := [][]byte{
+		{0, 1, 0},
+		{1, 1, 1},
+		{1, 4, 5},
+	}
+	reverse := Reverse(matrix, galoisAlgebra)
+	print(reverse)
 }

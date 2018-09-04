@@ -22,6 +22,53 @@ func Det(matrix [][]byte, alg ByteAlgebra) byte {
 	return det
 }
 
+func Reverse(matrix [][]byte, alg ByteAlgebra) [][]byte {
+	return Div(Transpose(minors(matrix, alg)), Det(matrix, alg), alg)
+}
+
+func Div(matrix [][] byte, divider byte, alg ByteAlgebra) [][]byte {
+	size := len(matrix)
+	result := make([][]byte, size)
+
+	for i := 0; i < size; i++ {
+		result[i] = make([]byte, size)
+		for j := 0; j < size; j++ {
+			result[i][j] = alg.Div(matrix[i][j], divider)
+		}
+	}
+	return result
+}
+
+func Transpose(matrix [][]byte) [][]byte {
+	size := len(matrix)
+	result := make([][]byte, size)
+
+	for i := 0; i < size; i++ {
+		result[i] = make([]byte, size)
+		for j := 0; j < size; j++ {
+			result[i][j] = matrix[j][i]
+		}
+	}
+	return result
+}
+
+func minors(matrix [][]byte, alg ByteAlgebra) [][]byte {
+	size := len(matrix)
+	result := make([][]byte, size)
+
+	for i := 0; i < size; i++ {
+		result[i] = make([]byte, size)
+		for j := 0; j < size; j++ {
+			if i+j%2 != 0 {
+				result[i][j] = alg.Sub(0, Det(cross(matrix, i, j), alg))
+			} else {
+				result[i][j] = alg.Add(0, Det(cross(matrix, i, j), alg))
+			}
+		}
+	}
+	return result
+}
+
 // returns matrix with size n-1 crossing row and column specified
 func cross(matrix [][]byte, row, col int) [][]byte {
 	size := len(matrix)

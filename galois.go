@@ -49,9 +49,15 @@ func (alg *ByteGaloisAlgebraImpl) Sub(x, y byte) byte {
 }
 
 func (alg *ByteGaloisAlgebraImpl) Mul(x, y byte) byte {
+	if x ==0 || y == 0 {
+		return 0
+	}
 	return alg.gfilog[(alg.gflog[x]+alg.gflog[y])%(alg.size-1)]
 }
 
 func (alg *ByteGaloisAlgebraImpl) Div(x, y byte) byte {
+	if x == 0 {
+		return 0
+	}
 	return byte(alg.gfilog[(alg.gflog[x]-alg.gflog[y]+alg.size-1)%(alg.size-1)])
 }
