@@ -110,5 +110,9 @@ func TestReverse(t *testing.T) {
 		{1, 4, 5},
 	}
 	reverse := Reverse(matrix, galoisAlgebra)
-	print(reverse)
+	if reverse[0][0] != 13 || reverse[0][1] != 12 || reverse[0][2] != 13 ||
+		reverse[1][0] != 1 || reverse[1][1] != 0 || reverse[1][2] != 0 ||
+		reverse[2][0] != 12 || reverse[2][1] != 13 || reverse[2][2] != 13 {
+		t.Error("Matrix reverse operation returns wrong result")
+	}
 }
