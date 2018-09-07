@@ -23,10 +23,27 @@ func Det(matrix [][]byte, alg ByteAlgebra) byte {
 }
 
 func Reverse(matrix [][]byte, alg ByteAlgebra) [][]byte {
-	return Div(Transpose(minors(matrix, alg)), Det(matrix, alg), alg)
+	return div(transpose(minors(matrix, alg)), Det(matrix, alg), alg)
 }
 
-func Div(matrix [][] byte, divider byte, alg ByteAlgebra) [][]byte {
+func Mul(a, b [][] byte, alg ByteAlgebra) [][]byte {
+	m := len(a)
+	n := len(b[0])
+	result := make([][]byte, m)
+	for i := 0; i < m; i++ {
+		result[i] = make([]byte, n)
+		for j := 0; j < n; j++ {
+			var current byte = 0
+			for r := 0; r < m; r++ {
+				current = alg.Add(current, alg.Mul(a[i][r], b[r][j]))
+			}
+			result[i][j] = current
+		}
+	}
+	return result
+}
+
+func div(matrix [][] byte, divider byte, alg ByteAlgebra) [][]byte {
 	size := len(matrix)
 	result := make([][]byte, size)
 
@@ -39,7 +56,7 @@ func Div(matrix [][] byte, divider byte, alg ByteAlgebra) [][]byte {
 	return result
 }
 
-func Transpose(matrix [][]byte) [][]byte {
+func transpose(matrix [][]byte) [][]byte {
 	size := len(matrix)
 	result := make([][]byte, size)
 

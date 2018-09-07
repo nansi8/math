@@ -97,7 +97,7 @@ func TestMatrixDiv(t *testing.T) {
 		{2, 4},
 		{6, 8},
 	}
-	div := Div(matrix, 2, algebra)
+	div := div(matrix, 2, algebra)
 	if div[0][0] != 1 || div[0][1] != 2 || div[1][0] != 3 || div[1][1] != 4 {
 		t.Error("Matrix division returns wrong result")
 	}
@@ -114,5 +114,22 @@ func TestReverse(t *testing.T) {
 		reverse[1][0] != 1 || reverse[1][1] != 0 || reverse[1][2] != 0 ||
 		reverse[2][0] != 12 || reverse[2][1] != 13 || reverse[2][2] != 13 {
 		t.Error("Matrix reverse operation returns wrong result")
+	}
+}
+
+func TestMatrixMul(t *testing.T) {
+	a := [][]byte{
+		{1, 1, 1},
+		{1, 2, 3},
+		{1, 4, 5},
+	}
+	b := [][]byte{
+		{7},
+		{3},
+		{2},
+	}
+	mul := Mul(a, b, galoisAlgebra)
+	if mul[0][0] != 6 || mul[1][0] != 7 || mul[2][0] != 1 {
+		t.Error("Matrix multiplication operation returns wrong result")
 	}
 }
