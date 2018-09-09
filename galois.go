@@ -8,7 +8,7 @@ const (
 type ByteGaloisAlgebraImpl struct {
 	gflog  []byte
 	gfilog []byte
-	size   byte
+	size   int16
 }
 
 func New(w byte) *ByteGaloisAlgebraImpl {
@@ -23,13 +23,13 @@ func New(w byte) *ByteGaloisAlgebraImpl {
 	default:
 		return nil
 	}
-	var size byte = 1 << w
+	var size int16 = 1 << w
 	gflog := make([]byte, size)
 	gfilog := make([]byte, size)
 
 	var log, b int16
 
-	for log, b = 0, 1; log < int16(size); log++ {
+	for log, b = 0, 1; log < size; log++ {
 		gflog[b] = byte(log)
 		gfilog[log] = byte(b)
 		b = b << 1
@@ -52,12 +52,12 @@ func (alg *ByteGaloisAlgebraImpl) Mul(x, y byte) byte {
 	if x == 0 || y == 0 {
 		return 0
 	}
-	return alg.gfilog[(alg.gflog[x]+alg.gflog[y])%(alg.size-1)]
+	return alg.gfilog[(int16(alg.gflog[x])+int16(alg.gflog[y]))%(alg.size-1)]
 }
 
 func (alg *ByteGaloisAlgebraImpl) Div(x, y byte) byte {
 	if x == 0 {
 		return 0
 	}
-	return alg.gfilog[(alg.gflog[x]-alg.gflog[y]+alg.size-1)%(alg.size-1)]
+	return alg.gfilog[(int16(alg.gflog[x])-int16(alg.gflog[y])+alg.size-1)%(alg.size-1)]
 }
