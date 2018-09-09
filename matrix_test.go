@@ -5,7 +5,8 @@ import (
 )
 
 var algebra ByteAlgebra = new(ByteAlgebraImpl)
-var galoisAlgebra ByteAlgebra = New(4)
+var galoisAlgebra4 ByteAlgebra = New(4)
+var galoisAlgebra8 ByteAlgebra = New(8)
 
 func TestDetTrivialMatrix(t *testing.T) {
 	trivialMatrix := [][]byte{
@@ -86,8 +87,12 @@ func TestCross(t *testing.T) {
 		{4, 5, 6},
 		{7, 8, 9},
 	}
+	expected := [][]byte{
+		{1, 3},
+		{7, 9},
+	}
 	cross := cross(matrix, 1, 1)
-	if cross[0][0] != 1 || cross[0][1] != 3 || cross[1][0] != 7 || cross[1][1] != 9 {
+	if !equal(expected, cross) {
 		t.Error("Cross function returns wrong result")
 	}
 }
@@ -97,8 +102,12 @@ func TestMatrixDiv(t *testing.T) {
 		{2, 4},
 		{6, 8},
 	}
+	expected := [][]byte{
+		{1, 2},
+		{3, 4},
+	}
 	div := div(matrix, 2, algebra)
-	if div[0][0] != 1 || div[0][1] != 2 || div[1][0] != 3 || div[1][1] != 4 {
+	if !equal(expected, div) {
 		t.Error("Matrix division returns wrong result")
 	}
 }
@@ -109,10 +118,36 @@ func TestReverse(t *testing.T) {
 		{1, 1, 1},
 		{1, 4, 5},
 	}
-	reverse := Reverse(matrix, galoisAlgebra)
-	if reverse[0][0] != 13 || reverse[0][1] != 12 || reverse[0][2] != 13 ||
-		reverse[1][0] != 1 || reverse[1][1] != 0 || reverse[1][2] != 0 ||
-		reverse[2][0] != 12 || reverse[2][1] != 13 || reverse[2][2] != 13 {
+	expected := [][]byte{
+		{13, 12, 13},
+		{1, 0, 0},
+		{12, 13, 13},
+	}
+	reverse := Reverse(matrix, galoisAlgebra4)
+	if !equal(expected, reverse) {
+		t.Error("Matrix reverse operation returns wrong result")
+	}
+}
+
+func TestReverseGF256(t *testing.T) {
+	matrix := [][]byte{
+		{0, 1, 0, 0, 0, 0},
+		{0, 0, 0, 1, 0, 0},
+		{0, 0, 0, 0, 1, 0},
+		{1, 1, 1, 1, 1, 1},
+		{1, 2, 3, 4, 5, 6},
+		{1, 8, 15, 64, 85, 120},
+	}
+	expected := [][]byte{
+		{142, 71, 0, 114, 35, 80},
+		{1, 0, 0, 0, 0, 0},
+		{143, 201, 244, 179, 195, 112},
+		{0, 1, 0, 0, 0, 0},
+		{0, 0, 1, 0, 0, 0},
+		{0, 143, 245, 192, 224, 32},
+	}
+	reverse := Reverse(matrix, galoisAlgebra8)
+	if !equal(expected, reverse) {
 		t.Error("Matrix reverse operation returns wrong result")
 	}
 }
@@ -128,8 +163,61 @@ func TestMatrixMul(t *testing.T) {
 		{3},
 		{2},
 	}
-	mul := Mul(a, b, galoisAlgebra)
-	if mul[0][0] != 6 || mul[1][0] != 7 || mul[2][0] != 1 {
+	mul := Mul(a, b, galoisAlgebra4)
+	expected := [][]byte{
+		{6},
+		{7},
+		{1},
+	}
+	if !equal(expected, mul) {
 		t.Error("Matrix multiplication operation returns wrong result")
 	}
+}
+
+func TestMatrixMulGF256(t *testing.T) {
+	a := [][]byte{
+		{142, 71, 0, 114, 35, 80},
+		{1, 0, 0, 0, 0, 0},
+		{143, 201, 244, 179, 195, 112},
+		{0, 1, 0, 0, 0, 0},
+		{0, 0, 1, 0, 0, 0},
+		{0, 143, 245, 192, 224, 32},
+	}
+	b := [][]byte{
+		{92},
+		{21},
+		{12},
+		{113},
+		{164},
+		{109},
+	}
+	expected := [][]byte{
+		{78},
+		{92},
+		{94},
+		{21},
+		{12},
+		{36},
+	}
+	mul := Mul(a, b, galoisAlgebra8)
+	if !equal(expected, mul) {
+		t.Error("Matrix multiplication operation returns wrong result")
+	}
+}
+
+func equal(a, b [][]byte) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	if len(a[0]) != len(b[0]) {
+		return false
+	}
+	for i := range a {
+		for j := range a[0] {
+			if a[i][j] != b[i][j] {
+				return false
+			}
+		}
+	}
+	return true
 }
