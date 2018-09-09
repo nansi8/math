@@ -12,7 +12,7 @@ func Det(matrix [][]byte, alg ByteAlgebra) byte {
 	var det byte = 0
 	for i := 0; i < size; i++ {
 		element := matrix[0][i]
-		minor := Det(cross(matrix, 0, i), alg)
+		minor := Det(Cross(matrix, 0, i), alg)
 		if i%2 == 0 {
 			det = alg.Add(det, alg.Mul(element, minor))
 		} else {
@@ -40,6 +40,29 @@ func Mul(a, b [][]byte, alg ByteAlgebra) [][]byte {
 			}
 			result[i][j] = current
 		}
+	}
+	return result
+}
+
+// returns matrix with size n-1 crossing row and column specified
+func Cross(matrix [][]byte, row, col int) [][]byte {
+	size := len(matrix)
+	result := make([][]byte, size-1)
+
+	var i, j, a, b int
+	for i, a = 0, 0; i < size; i++ {
+		if i == row {
+			continue
+		}
+		result[a] = make([]byte, size-1)
+		for j, b = 0, 0; j < size; j++ {
+			if j == col {
+				continue
+			}
+			result[a][b] = matrix[i][j]
+			b++
+		}
+		a++
 	}
 	return result
 }
@@ -78,34 +101,11 @@ func minors(matrix [][]byte, alg ByteAlgebra) [][]byte {
 		result[i] = make([]byte, size)
 		for j := 0; j < size; j++ {
 			if i+j%2 != 0 {
-				result[i][j] = alg.Sub(0, Det(cross(matrix, i, j), alg))
+				result[i][j] = alg.Sub(0, Det(Cross(matrix, i, j), alg))
 			} else {
-				result[i][j] = alg.Add(0, Det(cross(matrix, i, j), alg))
+				result[i][j] = alg.Add(0, Det(Cross(matrix, i, j), alg))
 			}
 		}
-	}
-	return result
-}
-
-// returns matrix with size n-1 crossing row and column specified
-func cross(matrix [][]byte, row, col int) [][]byte {
-	size := len(matrix)
-	result := make([][]byte, size-1)
-
-	var i, j, a, b int
-	for i, a = 0, 0; i < size; i++ {
-		if i == row {
-			continue
-		}
-		result[a] = make([]byte, size-1)
-		for j, b = 0, 0; j < size; j++ {
-			if j == col {
-				continue
-			}
-			result[a][b] = matrix[i][j]
-			b++
-		}
-		a++
 	}
 	return result
 }

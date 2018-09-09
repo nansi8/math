@@ -91,7 +91,7 @@ func TestCross(t *testing.T) {
 		{1, 3},
 		{7, 9},
 	}
-	cross := cross(matrix, 1, 1)
+	cross := Cross(matrix, 1, 1)
 	if !equal(expected, cross) {
 		t.Error("Cross function returns wrong result")
 	}
