@@ -1,10 +1,14 @@
 package math
 
 const (
+	// PrimePoly4 is prime polynom for GF (2^4)
 	PrimePoly4 = 023
+	// PrimePoly8 is prime polynom for GF (2^8)
 	PrimePoly8 = 0435
 )
 
+// ByteGaloisAlgebraImpl is an implementation of ByteAlgebraImpl interface
+// uses gflog and gfilog for defining multiplication and division operations
 type ByteGaloisAlgebraImpl struct {
 	gflog  []byte
 	gfilog []byte

@@ -1,6 +1,6 @@
 package math
 
-// returns det of matrix if specified algebra
+// Det returns det of matrix in specified algebra
 func Det(matrix [][]byte, alg ByteAlgebra) byte {
 	size := len(matrix)
 	if size == 1 {
@@ -22,10 +22,12 @@ func Det(matrix [][]byte, alg ByteAlgebra) byte {
 	return det
 }
 
+// Reverse returns reverse matrix in specified algebra
 func Reverse(matrix [][]byte, alg ByteAlgebra) [][]byte {
 	return div(transpose(minors(matrix, alg)), Det(matrix, alg), alg)
 }
 
+// Mul returns multiplication result of given matrixes in specified algebra
 func Mul(a, b [][]byte, alg ByteAlgebra) [][]byte {
 	l := len(a)
 	m := len(b)
@@ -44,7 +46,7 @@ func Mul(a, b [][]byte, alg ByteAlgebra) [][]byte {
 	return result
 }
 
-// returns matrix with size n-1 crossing row and column specified
+// Cross returns matrix with size n-1 crossing row and column specified
 func Cross(matrix [][]byte, row, col int) [][]byte {
 	size := len(matrix)
 	result := make([][]byte, size-1)
